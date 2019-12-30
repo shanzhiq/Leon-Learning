@@ -116,3 +116,53 @@ T a,b,c
 
 #### 条款5 : 了解c++默默编写并调用哪些函数
 
+c++对空类声明-个copy构造函数，cpoy assignment操作符和一个析构函数。如果没有声明任何的构造函数，编译器也会声明一个default函数。这些函数都是public且是inline的。
+
+如果在一个内含reference的成员的class内支持赋值操作，就必须自己定义copy assignment操作符。面对内含const成员的classes，编译器反应相同。更改const成员不合法。且c++不允许让reference改指向不同对象。
+
+还有一种特殊情况，如果基类的赋值操作符被声明为私有，，编译器就会拒绝为其派生类生成一个赋值操作符。
+
+
+
+#### 条款6：如果不想使用编译器自动生成的函数，就该明确拒绝。
+
+可以将这类函数自行声明为私有，可以阻止调用，但是不安全。因为成员函数或者友元函数还是可以调用。除非不去定义。iostream标准库就有这样实现。
+
+或者单独声明一个防止copying的基类。要做的就是继承这个类
+
+```c++
+class Uncopy{
+ protected:
+    Uncopy();
+    ~Uncopy();
+private:
+    Uncopy(const Uncopy&);
+    Uncopy& operator=(const Uncopy&);
+};
+```
+
+但是这种总是扮演基类，可能导致多重继承。而多重继承可能阻止***empty base class optimization***
+
+>
+>
+>​	空基类优化是：只要不会和同一类型的另一个对象或者子对象分配在同一地址，就不需要为其分配地址空间。关于不会和同一类型的另一个对象或者子对象分配在同一地址：
+>
+>```c++
+>class Empty
+>{ };
+>
+>class EmptyToo : public Empty
+>{ };
+>
+>class EmptyThree : public Empty, public EmptyToo
+>{ };
+>
+>sizeof(Empty) : 1
+>sizeof(EmptyToo) : 1
+>sizeof(EmptyThree) : 2
+>```
+>
+>$Emptythree$的基类$Empty$和$EmptyToo$不能分配在同一地址空间，C++内存布局不允许相同类型的子对象偏移量相同
+
+#### 条款7 ：为多态基类声明virtual析构函数
+
