@@ -256,6 +256,41 @@ DBConn::~DBConn(){
 
 #### 条款12：复制对象时勿忘每一个成分
 
+声明自己的copying函数会告诉编译器你不喜欢缺省实现的某些行为，编译器就会对于你写的实现代码几乎必然出错时不提示。比如局部拷贝。任何时候只要你承担起为derived类编写 copying函数，必须小心复制基类部分(考虑到部分成分是私有的)，所以应该让derived class 的copying函数调用相应的base class成员函数。
+
+当编写一个copying函数，确保复制所有的local变量，调用base class 恰当的copying函数。
+
+让copying assignment操作符调用copying构造函数不合理。不应该让copying assignment操作符调用copy构造函数。同样让copy构造函数调用copy assignment也是不合理的。如果copy构造函数和copying assignment操作符有共同的代码，方法是用一个私有的成员函数替代。
+
+- copying函数应确保复制对象内所有成员变量及所有base class成分。
+- 不要尝试以某个copying函数实现另一个copying函数。应该将共同实现部分放入第三个函数，由两者共同调用。
+
+
+
+## 资源管理
+
+#### 条款13:以对象管理资源
+
+
+
+#### 条款14：在资源管理类小心copying行为
+
+
+
+#### 条款15：在资源管理类中提供对原始资源的访问
+
+
+
+#### 条款16：使用new和delete要采用相同形式
+
+
+
+#### 条款17：以独立语句将newed对象置入智能指针
+
+
+
+## 设计与声明
+
 
 
 
